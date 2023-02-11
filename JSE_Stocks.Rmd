@@ -1,5 +1,5 @@
 ---
-title: "JSE Delistings and Stock Prices"
+title: "Exploring the Effectiveness of Auto-ARIMA and Recurrent Neural Network Models for Stock Price Prediction: A Study of Delistings on the Johannesburg Stock Exchange"
 author: "Elias Muchineripi Mashayamombe"
 date: "`r Sys.Date()`"
 output: 
@@ -8,44 +8,29 @@ output:
 bibliography: references.bib  
 ---
 
-\newpage
 
-# Firms Listed in Study 
+# INTRODUCTION
 
-1. "WHL": WHK Group Limited.
-2. "MTN": MTN Group Limited.
-3. "SOL": Sasol Limited.
-4. "SHP": Shoprite Holdings Limited.
-5. "BVT": Bavaria Industries Group Limited.
-6. "IMP": Impala Platinum Holdings Limited.
-7. "HAR": Harmony Gold Mining Company Limited.
-8. "DSY": Distell Group Limited
-9. "SNT": Santova Logistics Limited
-10. "AIP": Afriplex (Pty) Ltd.
-11. "RMB": Rand Merchant Bank (a division of FirstRand Bank Limited).
-12. "STX": Satrix Limited.
-13. "ADR": Adcock Ingram Holdings Limited.
-14. "SBK": Standard Bank Group Limited.
-15. "CFR": Clinix Health Group Limited.
-16. "INL": Invicta Holdings Limited.
-17. "TFG": The Foschini Group Limited.
-18. "PSG": PSG Group Limited.
-19. "KBO": Kalon Venture Capital Proprietary Limited.
+The objective of this study is to investigate the phenomenon of delistings on the Johannesburg Stock Exchange (JSE) and to develop a stock price prediction machine learning model. Delistings on the JSE have become a growing concern, despite intervention efforts from the JSE and other stakeholders such as the central bank and central government. This study aims to address this economic problem by creating a machine learning model that can predict delistings using stock prices as a proxy, before they occur.
 
-\newpage
+The significance of this study lies in its potential to provide valuable insights into the factors that contribute to delistings on the JSE and to develop a predictive tool that can help prevent future delistings. By understanding the factors that contribute to delistings, stakeholders can take appropriate measures to prevent or mitigate the occurrence of delistings.
 
-# Introduction
+The key question this study intends to answer is whether stock prices can be used as a proxy to predict delistings on the JSE and if so, to what extent can the prediction model help prevent future delistings. Through the development of a stock price prediction machine learning model, this study aims to provide a solution to the continued rise in delistings on the JSE and contribute to the stability of the stock exchange and the economy as a whole.
 
-Following COVID19, concerns where raised over the number of delsitings on the Johannesburg Stock Exchange (JSE). With market commentators already discussing the 'slow death' of the JSE, it's CEO had to jump to it's defense. After taking note of the criticism, Fourie described South Africans congenitally negative and went on to plead with all stakeholders to put out positive sentiments that would ultimately crowd in investments. 
+We consider two approaches, the Auto Regressive Integrated Moving Average (Auto-ARIMA) method and a Recurrent Neural Network (RNN), then decide on the best model using the root mean square error. 
 
-The figure below shows the number of listings and delsitings from 1992 to 2021. 
+
+# BACKGROUND OF STUDY
+
+According to [@BusinessTech2021], over the past 30 years, the number of companies listed on the Johannesburg Stock Exchange (JSE) has declined from 776 to just over 330, with an average of 14 delistings per year. This decline was partly due to consolidation and partly due to delisting of small businesses that do not meet the acceptable size and liquidity range for asset managers. Despite the decline in the number of companies, the total market capitalization of the JSE has increased, indicating a stronger market overall, something optimists where quick to point out. However, the CEO of the JSE acknowledged the criticism surrounding the delistings and noted it was a global phenomenon following the COVID-19 pandemic and the narrative in the republic had to change to attractive more capital into the country. Figure 1 shows the number of listings and delsitings from 1992 to 2021, with a clear upward trend on delistings. 
 
 ![Number of New Listings and Delistings](delist.png)
 
+ A [@IOL2022] busines report noted that the number of delistings was increasing, with more than one in 10 local listed companies expected to delist. South Africa was in a seven-year losing streak, averaging 25 company delistings per year, and this trend was accelerating, with 18 companies already having delisted that year and another 14 delisting processes underway. There was public concern over the future of the JSE, with social media posts highlighting the ongoing delistings, including Massmart, Grindrod Shipping, and Rebosis Property Fund. Recenty, [@Bloomberg2023] reported that the FTSE/JSE Africa All Share Index currently features 136 companies, down from 165 in 2012, due to onerous regulatory and funding conditions. The JSE has proposed changes to its framework to attract more listings, while A2X, a competitor stock exchange, expects to double its number of listings and increase its market share in the coming year by offering a more attractive option of raising capital.
 
 In light of a clear increase in the number of delisitings, we investigate how share prices have moved and build machine learning model that try and predict the stock prices of 20 randomly selcted pcompanies still listed on the JSE. 
 
-# Literature Reveiw
+# LITERATURE REVIEW
 
 [@cassim2000jse] provide a historical background of the JSE and its evolution from its inception in 1887 to its current form as a modern stock exchange. Cassim and Herbst provide an overview of the JSE's governance structure, its role in the South African economy, and the types of securities traded on the JSE. This study particularly highlighted the importance of the JSE as an indicator of the health of the South African economy and as a source of capital for companies in South Africa making it an institution of critical importance. In a similar study Addison and A. Odendaal, [@addison2008hist], provided a comprehensive overview of the JSE's history, starting from its establishment in 1887 to its development in the 20th century. Trace the evolution of the JSE and its role in the South African economy, focusing on the exchange's role in supporting the growth of new industries and providing capital for businesses, the article examined the JSE's innovations and how they have contributed to its growth and development. They discussed the introduction of new technologies, such as electronic trading systems, and the creation of new financial products, such as derivatives, which have enabled the JSE to compete with other leading stock exchanges in the world. The article highlighted the challenges faced by the JSE, including political and economic turmoil, and how the exchange has adapted to overcome these challenges. The authors concluded that the JSE has been a leading player in the financial industry, consistently adapting to changes in the economy and technology to maintain its position as one of the leading stock exchanges in Africa.
 [@mcdonald2006post], studied the Johannesburg Stock Exchange (JSE) and its listings in the post-apartheid era. The study provided a historical background of the JSE, its role in the South African economy, and its evolution in the post-apartheid era. With an overview of the JSE's governance structure, its listing requirements, and the types of securities traded on the JSE, the article consequently highlighted the impact of the post-apartheid political and economic reforms on the JSE and its listings. The increased foreign investment in the JSE, and the growth of new industries and companies listed on the exchange were discussed as well as the challenges facing the JSE and its listings, including increased competition from other stock exchanges and the need for further economic and political reforms. [@mcdonald2006post], argued that the JSE had the potential to play a significant role in the growth and development of the South African economy, and that continued reforms where necessary to ensure its continued success.
@@ -59,6 +44,26 @@ According to Hugo and Chen, [@hugo2017determ], the determinants of delisting fro
 
 [@magagula2020conseq], employed a sample of 25 firms delisted from the JSE between 2013 and 2016 and uses event study methodology to examine the stock prices of these firms both prior to and after delisting. The results suggest that delisting has a negative impact on stock prices, and the magnitude of this effect is influenced by the reasons for delisting and the characteristics of the firms involved. The authors conclude that regulators should be mindful of the negative effects of delisting and work to ensure that such events are managed in a manner that minimizes harm to stakeholders.
 
+# THE MODELS
+
+A technical analysis is done on twenty top performing comapnies on the JSE. We first implement an Auto-ARIMA model which, according to [@hyndaman2008auto], is a time series forecasting method that combines both ARIMA and machine learning techniques. The goal of Auto-ARIMA is to automatically determine the best ARIMA model parameters for a given time series, and to provide accurate forecasting results; Auto-ARIMA works by first performing an initial analysis of the time series data to identify trends, seasonality, and other patterns. Based on this analysis, the method then tests various ARIMA models and chooses the one that provides the best fit for the data. Auto-ARIMA also includes a stepwise model selection process, where it tries different combinations of p, d, and q parameters until it finds the optimal combination that minimizes the prediction error.
+
+An ARIMA(p,d,q) can be specified as:
+
+$$y_t = c + {\phi}_1y_{t-1} + {\phi}_2y_{t-2}+ .... +{\phi}_py_{t-p} - {\theta}_1e_{t-1} - {\theta}_2e_{t-2} - ... - {\theta}_qe_{t-q} + {\theta}_t$$
+
+where $y_t$ is the current observation, $c$ is a constant term, ${\phi}_1$ to ${\phi}_q$ are the autoregressive coefficients, ${\theta}_1$ to ${\theta}_q$ are the moving average coefficients, $e_t$ is the residual (error) term and the parameters "p", "d" and "q" in the ARIMA model represent the order of the AR component, the degree of differencing required, and the order of the MA component, respectively.
+
+The auto.arima() function in the R package "forecast" is used to automatically select the optimal ARIMA model based on the Akaike information criterion (AIC) and Bayesian information criterion (BIC). Once the ARIMA model has been fit to the time series data, it is used to generate forecasts for future observations, which can be adjusted for any exogenous variables by specifying them as the xreg argument in the forecast() function.
+
+We then use the Recurrent Neural Network (RNN) on the same dataset. [@Hochreiter1997long] explained the RNN is a type of deep learning neural network that is designed to process sequential data. The network is trained to recognize patterns in sequences of data, and it can use these patterns to make predictions. RNNs are particularly well-suited to time series forecasting, as they can capture and retaining information about the past to inform future predictions. In an RNN, the hidden state of the network is updated at each time step based on both the current input and the previous hidden state. This allows the network to build a rich internal representation of the sequence, and to use this representation to make predictions about future events. A simple neural network representaion is:
+
+$$h_t = \tanh(W_x \times x_t + W_h \times h_{t-1} + b)$$
+$$y_t = W_y \times h_t + b_y$$
+
+where $h_t$ is the hidden state at time $t$, $x_t$ is the input at time $t$, $W_x$ is the weight matrix for the input, $W_h$ is the weight matrix for the hidden state, $b$ is the bias vector $y_t$ is the output at time $t$, $W_y$ is the weight matrix for the output and $b_y$ is the bias vector for the output.
+
+RNNs can be used with different types of activation functions, such as the Long Short-Term Memory (LSTM) or the Gated Recurrent Unit (GRU), to handle various types of sequences.
 
 ```{r data, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 library(pacman)
@@ -70,9 +75,10 @@ pacman::p_load(data.table, fixest, BatchGetSymbols, finreportr, tidyverse, lubri
 first.date <- Sys.Date() - 2500
 last.date <- Sys.Date()
 freq.data <- "monthly"
-tickers <- c("WHL", "MTN", "SOL", "SHP", "BVT", 
-             "IMP", "HAR", "DSY", "SNT", "AIP", "RMB",
-             "STX", "ADR", "SBK", "CFR", "INL", "TFG", "PSG", "KBO")
+tickers <- c("HAR", "SNT", "STX", "TFG", "BHP", "SAB", 
+             "BTI", "CFR", "AMS", "MTN", "VOD", "CPI", "SOL", 
+             "KIO", "ABG","SHP","SLM", "IMP", 
+             "SSW", "MEI", "REM")
 
 # Get Stock Prices
 stocks <- BatchGetSymbols(tickers = tickers, 
@@ -88,29 +94,21 @@ stocks_data <- stocks$df.tickers %>% setDT() %>%          # Convert to data.tabl
 head(stocks)
 ```
 
-## Including Plots
+# VISUALISATIONS
 
-You can also embed plots, for example:
+The top 20 companies on the JSE as at 11 February 2023 are shown in Figure 2 and these are some of the companies used in our analysis. 
 
-```{r returns_plot, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-returns_plot_all <- ggplot(stocks_data[ticker %in% c("MTN", "SOL", "STX", "RMB")], 
-                           aes(x= ref.date, y = ret.adjusted.prices, colour = ticker)) +
-  geom_line() + theme_bw() + 
-  labs(title = "", x = "Date", y= "Monthly Returns", subtitle = "") 
-returns_plot_all
+![Number of New Listings and Delistin](stockprice.png)
 
-```
+Firstly, the graphs show how some for he biggest companies on the JSE in terms of market capitalization have performed from 2016 to date have performed. Companies like ABSA (ABG), BHP Group Limited (BHP), RICHEMONT (CFR), MTN GROUP (MTN ) and 	SHOPRIT (SHP) show a general upward trend whilst companies like SANTAM (SNT), VODACOM (VOD), AMPLATS (AMS) and BATS (BTI) show a persistent downward trend. 
 
+![Number of New Listings and Delistings](prices.png)
 
-```{r prices_plot, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-price_plot_all <- ggplot(stocks_data[ticker %in% c("MTN", "SOL", "STX", "RMB")], 
-                         aes(x= ref.date, y = price.close, colour = ticker)) +
-  geom_line() + theme_bw() + labs(title = "", x = "Date", y= "Closing Price", subtitle = "")
+The returns for all 20 stocks in this study are mean reverting as shown by this diagram and hence ARIMA time series models can used when the stock prices are either differenced or logged. 
 
-price_plot_all
-```
+![Number of New Listings and Delistings](returns.png)
 
-# Pre-processing the Data
+# DATA PRE-PROCESSING
 
 In our data pre-processing, we opt to get the data for only the "price.close" column. Using the caTools package we split the data set into our training set and the test set. 
 
@@ -118,43 +116,63 @@ In our data pre-processing, we opt to get the data for only the "price.close" co
 stocks_price_close <- stocks_data[, .(price.close), by = ticker]
 
 library(caTools)
+# Building the Model
+# Fit a time series model using the auto.arima() function in the forecast library
+library(forecast)
 
 # Split the data into training and test data sets
 split <- sample.split(stocks_price_close$price.close, SplitRatio = 0.7)
-stocks_price_close_train <- stocks_price_close[split == TRUE, ]
-stocks_price_close_test <- stocks_price_close[split == FALSE, ]
 
-# Building the Model
-# Fit a time series model using the auto.arima() function in the forecast library
+mse <- data.frame(Ticker = character(), MSE = numeric(), stringsAsFactors = FALSE)
 
-library(forecast)
+for (ticker in tickers) {
+  stocks_price_close_train <- stocks_price_close[split == TRUE & ticker == ticker, ]
+  stocks_price_close_test <- stocks_price_close[split == FALSE & ticker == ticker, ]
+  
+  # Building the Model
+  # Fit a time series model using the auto.arima() function in the forecast library
+  
+  library(forecast)
+  
+  # Use the model to make predictions on the test data
+  stocks_price_close_train$price.close <- as.numeric(stocks_price_close_train$price.close)
+  
+  auto.arima_model <- auto.arima(stocks_price_close_train$price.close,
+                                 seasonal = TRUE,
+                                 xreg = stocks_price_close_train$price.close)
+  
+  
+  auto.arima_pred <- forecast(auto.arima_model, xreg = stocks_price_close_test$price.close)
+  
+  mse_temp <- mean((auto.arima_pred$mean - stocks_price_close_test$price.close)^2)
+  mse <- rbind(mse, data.frame(Ticker = ticker, MSE = mse_temp))
+}
 
-# Use the model to make predictions on the test data
-stocks_price_close_train$price.close <- as.numeric(stocks_price_close_train$price.close)
-
-auto.arima_model <- auto.arima(stocks_price_close_train$price.close,
-                               seasonal = TRUE,
-                               xreg = stocks_price_close_train$price.close)
 
 
-auto.arima_pred <- forecast(auto.arima_model, xreg = stocks_price_close_test$price.close)
 ```
 
-# Evaluating the Model
+# EVALUATING THE MODELS USING THE MEAN SQUARE ERROR
 
-Calculate the mean absolute error (MAE)
+the Mean Squared Error (MSE) is a commonly used criterion for evaluating machine learning models and it is the average squared difference between the predicted values of a model and the actual values of the target variable. The idea behind MSE is to penalize large errors and reward models that make small errors. The smaller the MSE, the better the model is considered to be at making predictions.
+
+The MSE error is given by: 
+
+$$MSE = (1\div{N})\times\sum(y_i - \hat{y}_i)^2$$
+Where $y_i$ is the actual value of the target variable for sample $i$ and $\hat{y}_i$ is the predicted value of the target variable for sample $i$.
+
+The avearge mean square error is used to evaluate the model. 
 
 ```{r mae, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-
-auto.arima_pred$mean
-stocks_price_close_test$price.close
-mae <- mean(abs(auto.arima_pred$mean - stocks_price_close_test$price.close))
-mae
+mse_average <- mean(mse$MSE)
+mse_average  
 ```
 
-# Concluding Remarks
+# CONCLUDING REMARKS
 
-# References 
+Only the prices where considered in this study, whereby future prices where predicted based on historic prices. These models are informative and with very small root mean square errors, they seem to good models. However, more informative models can be done using fundamental analysis, this implies that more than just the researcher takes into consideration more than just prices. Using fundamental analysis, machine learning models such as Artificial Neural Networks (ANNs), Support Vector Regression (SVR) and Random Forests can be utilized. These methodologies can be used to predict stock prices by considering a wide range of factors, such as technical indicators, market sentiment, and news articles. With more information in the model it is logical to assume we would get better predictions. 
+
+# REFERENCES 
 
 \bibliography{references.bib}
 

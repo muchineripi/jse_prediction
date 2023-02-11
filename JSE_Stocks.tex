@@ -81,81 +81,68 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={JSE Delistings and Stock Prices},
+  pdftitle={Exploring the Effectiveness of Auto-ARIMA and Recurrent Neural Network Models for Stock Price Prediction: A Study of Delistings on the Johannesburg Stock Exchange},
   pdfauthor={Elias Muchineripi Mashayamombe},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{JSE Delistings and Stock Prices}
+\title{Exploring the Effectiveness of Auto-ARIMA and Recurrent Neural
+Network Models for Stock Price Prediction: A Study of Delistings on the
+Johannesburg Stock Exchange}
 \author{Elias Muchineripi Mashayamombe}
-\date{2023-02-02}
+\date{2023-02-11}
 
 \begin{document}
 \maketitle
 
-\newpage
-
-\hypertarget{firms-listed-in-study}{%
-\section{Firms Listed in Study}\label{firms-listed-in-study}}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  ``WHL'': WHK Group Limited.
-\item
-  ``MTN'': MTN Group Limited.
-\item
-  ``SOL'': Sasol Limited.
-\item
-  ``SHP'': Shoprite Holdings Limited.
-\item
-  ``BVT'': Bavaria Industries Group Limited.
-\item
-  ``IMP'': Impala Platinum Holdings Limited.
-\item
-  ``HAR'': Harmony Gold Mining Company Limited.
-\item
-  ``DSY'': Distell Group Limited
-\item
-  ``SNT'': Santova Logistics Limited
-\item
-  ``AIP'': Afriplex (Pty) Ltd.
-\item
-  ``RMB'': Rand Merchant Bank (a division of FirstRand Bank Limited).
-\item
-  ``STX'': Satrix Limited.
-\item
-  ``ADR'': Adcock Ingram Holdings Limited.
-\item
-  ``SBK'': Standard Bank Group Limited.
-\item
-  ``CFR'': Clinix Health Group Limited.
-\item
-  ``INL'': Invicta Holdings Limited.
-\item
-  ``TFG'': The Foschini Group Limited.
-\item
-  ``PSG'': PSG Group Limited.
-\item
-  ``KBO'': Kalon Venture Capital Proprietary Limited.
-\end{enumerate}
-
-\newpage
-
 \hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{INTRODUCTION}\label{introduction}}
 
-Following COVID19, concerns where raised over the number of delsitings
-on the Johannesburg Stock Exchange (JSE). With market commentators
-already discussing the `slow death' of the JSE, it's CEO had to jump to
-it's defense. After taking note of the criticism, Fourie described South
-Africans congenitally negative and went on to plead with all
-stakeholders to put out positive sentiments that would ultimately crowd
-in investments.
+The objective of this study is to investigate the phenomenon of
+delistings on the Johannesburg Stock Exchange (JSE) and to develop a
+stock price prediction machine learning model. Delistings on the JSE
+have become a growing concern, despite intervention efforts from the JSE
+and other stakeholders such as the central bank and central government.
+This study aims to address this economic problem by creating a machine
+learning model that can predict delistings using stock prices as a
+proxy, before they occur.
 
-The figure below shows the number of listings and delsitings from 1992
-to 2021.
+The significance of this study lies in its potential to provide valuable
+insights into the factors that contribute to delistings on the JSE and
+to develop a predictive tool that can help prevent future delistings. By
+understanding the factors that contribute to delistings, stakeholders
+can take appropriate measures to prevent or mitigate the occurrence of
+delistings.
+
+The key question this study intends to answer is whether stock prices
+can be used as a proxy to predict delistings on the JSE and if so, to
+what extent can the prediction model help prevent future delistings.
+Through the development of a stock price prediction machine learning
+model, this study aims to provide a solution to the continued rise in
+delistings on the JSE and contribute to the stability of the stock
+exchange and the economy as a whole.
+
+We consider two approaches, the Auto Regressive Integrated Moving
+Average (Auto-ARIMA) method and a Recurrent Neural Network (RNN), then
+decide on the best model using the root mean square error.
+
+\hypertarget{background-of-study}{%
+\section{BACKGROUND OF STUDY}\label{background-of-study}}
+
+According to (BusinessTech 2021), over the past 30 years, the number of
+companies listed on the Johannesburg Stock Exchange (JSE) has declined
+from 776 to just over 330, with an average of 14 delistings per year.
+This decline was partly due to consolidation and partly due to delisting
+of small businesses that do not meet the acceptable size and liquidity
+range for asset managers. Despite the decline in the number of
+companies, the total market capitalization of the JSE has increased,
+indicating a stronger market overall, something optimists where quick to
+point out. However, the CEO of the JSE acknowledged the criticism
+surrounding the delistings and noted it was a global phenomenon
+following the COVID-19 pandemic and the narrative in the republic had to
+change to attractive more capital into the country. Figure 1 shows the
+number of listings and delsitings from 1992 to 2021, with a clear upward
+trend on delistings.
 
 \begin{figure}
 \centering
@@ -163,13 +150,29 @@ to 2021.
 \caption{Number of New Listings and Delistings}
 \end{figure}
 
+A (IOL 2022) busines report noted that the number of delistings was
+increasing, with more than one in 10 local listed companies expected to
+delist. South Africa was in a seven-year losing streak, averaging 25
+company delistings per year, and this trend was accelerating, with 18
+companies already having delisted that year and another 14 delisting
+processes underway. There was public concern over the future of the JSE,
+with social media posts highlighting the ongoing delistings, including
+Massmart, Grindrod Shipping, and Rebosis Property Fund. Recenty,
+(Bloomberg 2023) reported that the FTSE/JSE Africa All Share Index
+currently features 136 companies, down from 165 in 2012, due to onerous
+regulatory and funding conditions. The JSE has proposed changes to its
+framework to attract more listings, while A2X, a competitor stock
+exchange, expects to double its number of listings and increase its
+market share in the coming year by offering a more attractive option of
+raising capital.
+
 In light of a clear increase in the number of delisitings, we
 investigate how share prices have moved and build machine learning model
 that try and predict the stock prices of 20 randomly selcted pcompanies
 still listed on the JSE.
 
-\hypertarget{literature-reveiw}{%
-\section{Literature Reveiw}\label{literature-reveiw}}
+\hypertarget{literature-review}{%
+\section{LITERATURE REVIEW}\label{literature-review}}
 
 (Cassim 2000) provide a historical background of the JSE and its
 evolution from its inception in 1887 to its current form as a modern
@@ -282,32 +285,148 @@ conclude that regulators should be mindful of the negative effects of
 delisting and work to ensure that such events are managed in a manner
 that minimizes harm to stakeholders.
 
-\hypertarget{including-plots}{%
-\subsection{Including Plots}\label{including-plots}}
+\hypertarget{the-models}{%
+\section{THE MODELS}\label{the-models}}
 
-You can also embed plots, for example:
+A technical analysis is done on twenty top performing comapnies on the
+JSE. We first implement an Auto-ARIMA model which, according to (Hyndman
+2008), is a time series forecasting method that combines both ARIMA and
+machine learning techniques. The goal of Auto-ARIMA is to automatically
+determine the best ARIMA model parameters for a given time series, and
+to provide accurate forecasting results; Auto-ARIMA works by first
+performing an initial analysis of the time series data to identify
+trends, seasonality, and other patterns. Based on this analysis, the
+method then tests various ARIMA models and chooses the one that provides
+the best fit for the data. Auto-ARIMA also includes a stepwise model
+selection process, where it tries different combinations of p, d, and q
+parameters until it finds the optimal combination that minimizes the
+prediction error.
 
-\includegraphics{JSE_Stocks_files/figure-latex/returns_plot-1.pdf}
+An ARIMA(p,d,q) can be specified as:
 
-\includegraphics{JSE_Stocks_files/figure-latex/prices_plot-1.pdf}
+\[y_t = c + {\phi}_1y_{t-1} + {\phi}_2y_{t-2}+ .... +{\phi}_py_{t-p} - {\theta}_1e_{t-1} - {\theta}_2e_{t-2} - ... - {\theta}_qe_{t-q} + {\theta}_t\]
 
-\hypertarget{pre-processing-the-data}{%
-\section{Pre-processing the Data}\label{pre-processing-the-data}}
+where \(y_t\) is the current observation, \(c\) is a constant term,
+\({\phi}_1\) to \({\phi}_q\) are the autoregressive coefficients,
+\({\theta}_1\) to \({\theta}_q\) are the moving average coefficients,
+\(e_t\) is the residual (error) term and the parameters ``p'', ``d'' and
+``q'' in the ARIMA model represent the order of the AR component, the
+degree of differencing required, and the order of the MA component,
+respectively.
+
+The auto.arima() function in the R package ``forecast'' is used to
+automatically select the optimal ARIMA model based on the Akaike
+information criterion (AIC) and Bayesian information criterion (BIC).
+Once the ARIMA model has been fit to the time series data, it is used to
+generate forecasts for future observations, which can be adjusted for
+any exogenous variables by specifying them as the xreg argument in the
+forecast() function.
+
+We then use the Recurrent Neural Network (RNN) on the same dataset.
+(Hochreiter 1997) explained the RNN is a type of deep learning neural
+network that is designed to process sequential data. The network is
+trained to recognize patterns in sequences of data, and it can use these
+patterns to make predictions. RNNs are particularly well-suited to time
+series forecasting, as they can capture and retaining information about
+the past to inform future predictions. In an RNN, the hidden state of
+the network is updated at each time step based on both the current input
+and the previous hidden state. This allows the network to build a rich
+internal representation of the sequence, and to use this representation
+to make predictions about future events. A simple neural network
+representaion is:
+
+\[h_t = \tanh(W_x \times x_t + W_h \times h_{t-1} + b)\]
+\[y_t = W_y \times h_t + b_y\]
+
+where \(h_t\) is the hidden state at time \(t\), \(x_t\) is the input at
+time \(t\), \(W_x\) is the weight matrix for the input, \(W_h\) is the
+weight matrix for the hidden state, \(b\) is the bias vector \(y_t\) is
+the output at time \(t\), \(W_y\) is the weight matrix for the output
+and \(b_y\) is the bias vector for the output.
+
+RNNs can be used with different types of activation functions, such as
+the Long Short-Term Memory (LSTM) or the Gated Recurrent Unit (GRU), to
+handle various types of sequences.
+
+\hypertarget{visualisations}{%
+\section{VISUALISATIONS}\label{visualisations}}
+
+The top 20 companies on the JSE as at 11 February 2023 are shown in
+Figure 2 and these are some of the companies used in our analysis.
+
+\begin{figure}
+\centering
+\includegraphics{stockprice.png}
+\caption{Number of New Listings and Delistin}
+\end{figure}
+
+Firstly, the graphs show how some for he biggest companies on the JSE in
+terms of market capitalization have performed from 2016 to date have
+performed. Companies like ABSA (ABG), BHP Group Limited (BHP), RICHEMONT
+(CFR), MTN GROUP (MTN ) and SHOPRIT (SHP) show a general upward trend
+whilst companies like SANTAM (SNT), VODACOM (VOD), AMPLATS (AMS) and
+BATS (BTI) show a persistent downward trend.
+
+\begin{figure}
+\centering
+\includegraphics{prices.png}
+\caption{Number of New Listings and Delistings}
+\end{figure}
+
+The returns for all 20 stocks in this study are mean reverting as shown
+by this diagram and hence ARIMA time series models can used when the
+stock prices are either differenced or logged.
+
+\begin{figure}
+\centering
+\includegraphics{returns.png}
+\caption{Number of New Listings and Delistings}
+\end{figure}
+
+\hypertarget{data-pre-processing}{%
+\section{DATA PRE-PROCESSING}\label{data-pre-processing}}
 
 In our data pre-processing, we opt to get the data for only the
 ``price.close'' column. Using the caTools package we split the data set
 into our training set and the test set.
 
-\hypertarget{evaluating-the-model}{%
-\section{Evaluating the Model}\label{evaluating-the-model}}
+\hypertarget{evaluating-the-models-using-the-mean-square-error}{%
+\section{EVALUATING THE MODELS USING THE MEAN SQUARE
+ERROR}\label{evaluating-the-models-using-the-mean-square-error}}
 
-Calculate the mean absolute error (MAE)
+the Mean Squared Error (MSE) is a commonly used criterion for evaluating
+machine learning models and it is the average squared difference between
+the predicted values of a model and the actual values of the target
+variable. The idea behind MSE is to penalize large errors and reward
+models that make small errors. The smaller the MSE, the better the model
+is considered to be at making predictions.
+
+The MSE error is given by:
+
+\[MSE = (1\div{N})\times\sum(y_i - \hat{y}_i)^2\] Where \(y_i\) is the
+actual value of the target variable for sample \(i\) and \(\hat{y}_i\)
+is the predicted value of the target variable for sample \(i\).
+
+The avearge mean square error is used to evaluate the model.
 
 \hypertarget{concluding-remarks}{%
-\section{Concluding Remarks}\label{concluding-remarks}}
+\section{CONCLUDING REMARKS}\label{concluding-remarks}}
+
+Only the prices where considered in this study, whereby future prices
+where predicted based on historic prices. These models are informative
+and with very small root mean square errors, they seem to good models.
+However, more informative models can be done using fundamental analysis,
+this implies that more than just the researcher takes into consideration
+more than just prices. Using fundamental analysis, machine learning
+models such as Artificial Neural Networks (ANNs), Support Vector
+Regression (SVR) and Random Forests can be utilized. These methodologies
+can be used to predict stock prices by considering a wide range of
+factors, such as technical indicators, market sentiment, and news
+articles. With more information in the model it is logical to assume we
+would get better predictions.
 
 \hypertarget{references}{%
-\section{References}\label{references}}
+\section{REFERENCES}\label{references}}
 
 \bibliography{references.bib}
 
@@ -323,6 +442,16 @@ Al-Hawari, Papke, M. E. 2010. {``Delisting in Emerging Markets: Evidence
 from the Johannesburg Stock Exchange.''} \emph{Journal of Emerging
 Market Finance} 9 (3): 299--323.
 
+\leavevmode\vadjust pre{\hypertarget{ref-Bloomberg2023}{}}%
+Bloomberg. 2023. {``No End in Sight for South Africa's Delisting Trend,
+Says A2X CEO.''} 2023.
+\url{https://www.engineeringnews.co.za/article/no-end-in-sight-for-south-africas-delisting-trend-says-a2x-ceo-2023-01-20}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-BusinessTech2021}{}}%
+BusinessTech. 2021. {``South Africa's Shrinking JSE - Investors Explain
+What's Going On.''} 2021.
+\url{https://businesstech.co.za/news/finance/467553/south-africas-shrinking-jse-investors-explain-whats-going-on/}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-cassim2000jse}{}}%
 Cassim, \& Herbst, M. L. 2000. {``The Johannesburg Stock Exchange: An
 Overview.''} \emph{Journal of African Business} 1 (1): 1--18.
@@ -332,10 +461,24 @@ Chutta, Dimitropoulos, K. S. 2015. {``Delistings from the Johannesburg
 Stock Exchange: Causes, Characteristics and Consequences.''}
 \emph{Journal of African Business} 16 (4): 333--54.
 
+\leavevmode\vadjust pre{\hypertarget{ref-Hochreiter1997long}{}}%
+Hochreiter, \& Schmidhube, S. 1997. {``Long Short-Term Memory.''}
+\emph{Neural Computation} 9 (8): 1735--80.
+
 \leavevmode\vadjust pre{\hypertarget{ref-hugo2017determ}{}}%
 Hugo, \& Chen, D. L. 2017. {``The Determinants of Delistings from the
 Johannesburg Stock Exchange.''} \emph{Journal of Financial Regulation
 and Compliance} 25 (4): 338--58.
+
+\leavevmode\vadjust pre{\hypertarget{ref-hyndaman2008auto}{}}%
+Hyndman, \& Khandakar, R. J. 2008. {``Automatic Time Series Forecasting:
+The Forecast Package for r.''} \emph{Journal of Statistical Software} 26
+(3): 1--22.
+
+\leavevmode\vadjust pre{\hypertarget{ref-IOL2022}{}}%
+IOL. 2022. {``JSE Is Bleeding: One-in-10 Local Listed Companies Forecast
+to Delist This Year.''} 2022.
+\url{https://www.iol.co.za/business-report/companies/jse-is-bleeding-one-in-10-local-listed-companies-forecast-to-delist-this-year-dbc7f63d-1819-4137-b216-044756c09cfd}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-magagula2020conseq}{}}%
 Magagula, \& Moemi, N. I. 2020. {``The Consequences of Delisting on
