@@ -1,8 +1,25 @@
-# Stock Price Prediction Model
+############################################
+# Elias Muchineripi Mashayamombe
+# CYO Project Final Submission
+# HarvardX PH125.9x - Data Science: Capstone
+# Date - 13/02/2023
+#############################################
 
-#Load pacman packagev - This helps load packages without using library function over and over.
-library(pacman)
-pacman::p_load(data.table, fixest, BatchGetSymbols, finreportr, tidyverse, lubridate, ggplot2)
+
+# Stock Price Prediction Models
+
+#Load necessary pacakges if they are not there and iterate through the packages using a for loop
+# Fit a time series model using the auto.arima() function in the forecast library
+
+PackageNames <- c("data.table,", "tidyverse", "fixest", "BatchGetSymbols", "finreportr", 
+                  "lubridate", "ggplot2", "tseries", "knitr", "caTools", "forecast", "caret")
+for(i in PackageNames){
+  if(!require(i, character.only = T)){
+    install.packages(i, dependencies = T)
+    require(i, character.only = T)
+  }
+} 
+
 
 first.date <- Sys.Date() - 2500
 last.date <- Sys.Date()
@@ -12,10 +29,11 @@ tickers <- c("HAR", "SNT", "STX", "TFG", "BHP", "SAB",
              "KIO", "ABG","SHP","SLM", "IMP", 
              "SSW", "MEI", "REM")
 
+
 # Get Stock Prices
-stocks <- BatchGetSymbols(tickers = tickers, 
+stocks <- BatchGetSymbols(tickers = tickers,
                           first.date = first.date,
-                          last.date = last.date, 
+                          last.date = last.date,
                           freq.data = freq.data,
                           do.cache = FALSE,
                           thresh.bad.data = 0)
@@ -24,7 +42,7 @@ stocks <- BatchGetSymbols(tickers = tickers,
 stocks_data <- stocks$df.tickers %>% setDT() %>%          # Convert to data.table
   .[order(ticker, ref.date)]                           # Order by ticker and date
 
-#colnames(stocks_data)
+colnames(stocks_data)
 #head(stocks_data)
 # returns_plot_all <- ggplot(stocks_data[ticker %in% c("MTN", "SOL", "STX", "SHP")], 
 #                            aes(x= ref.date, y = ret.adjusted.prices, colour = ticker)) +
@@ -57,11 +75,16 @@ returns_sep
 
 stocks_price_close <- stocks_data[, .(price.close), by = ticker]
 
-library(caTools)
-# Building the Model
-# Fit a time series model using the auto.arima() function in the forecast library
-library(forecast)
+results <- data.table(ticker = character(0), test = character(0), statistic = numeric(0), p.value = numeric(0))
+for (ticker in tickers) {
+  price.close <- stocks_price_close[ticker == ticker, price.close]
+  adf.test <- adf.test(price.close, k = 0)
+  results <- rbind(results, data.table(ticker = ticker, test = "ADF", statistic = adf.test$statistic, p.value = adf.test$p.value))
+}
 
+kable(results, caption = "Unit Root Test Results", align = c("l", "c", "c", "c"))
+
+# Building the Model
 # Split the data into training and test data sets
 split <- sample.split(stocks_price_close$price.close, SplitRatio = 0.7)
 
@@ -71,12 +94,7 @@ for (ticker in tickers) {
   stocks_price_close_train <- stocks_price_close[split == TRUE & ticker == ticker, ]
   stocks_price_close_test <- stocks_price_close[split == FALSE & ticker == ticker, ]
   
-  # Building the Model
-  # Fit a time series model using the auto.arima() function in the forecast library
-  
-  library(forecast)
-  
-  # Use the model to make predictions on the test data
+# Use the model to make predictions on the test data
   stocks_price_close_train$price.close <- as.numeric(stocks_price_close_train$price.close)
   
   auto.arima_model <- auto.arima(stocks_price_close_train$price.close,
@@ -90,7 +108,42 @@ for (ticker in tickers) {
   mse <- rbind(mse, data.frame(Ticker = ticker, MSE = mse_temp))
 }
 
+# mCalculate the mean square error
 mse_average <- mean(mse$MSE)
 mse_average  
 
 
+# Split data into train and test sets for each stock
+set.seed(123)
+splits <- lapply(unique(stocks_price_close$ticker), function(x) {
+  stock_prices <- stocks_price_close[ticker == x,]$price.close
+  train_index <- createDataPartition(stock_prices, p = 0.8, list = FALSE)
+  list(train = data.frame(price.close = stock_prices[train_index]), 
+       test = data.frame(price.close = stock_prices[-train_index]))
+})
+
+head(splits)
+
+# Define the RNN model
+rnn_model <- function(x) {
+  train_df <- x$train
+  test_df <- x$test
+  colnames(train_df) <- c("price.close")
+  colnames(test_df) <- c("price.close")
+  model <- train(price.close ~ ., data = train_df, method = "recurrent_neural_network")
+  predict(model, test_df)
+}
+
+# Use sapply to apply the RNN model to each stock
+predictions <- sapply(splits, rnn_model)
+
+
+rnn_model <- function(x) {
+  train_df <- x$train
+  test_df <- x$test
+  names(train_df) <- c("price.close")
+  names(test_df) <- c("price.close")
+  model <- train(price.close ~ ., data = train_df, method = "recurrent_neural_network")
+  predict(model, test_df)
+}
+predictions <- sapply(splits$price.close, rnn_model)

@@ -34,6 +34,16 @@
 \makeatother
 \usepackage{xcolor}
 \usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -90,10 +100,12 @@
 Network Models for Stock Price Prediction: A Study of Delistings on the
 Johannesburg Stock Exchange}
 \author{Elias Muchineripi Mashayamombe}
-\date{2023-02-11}
+\date{2023-02-13}
 
 \begin{document}
 \maketitle
+
+\newpage
 
 \hypertarget{introduction}{%
 \section{INTRODUCTION}\label{introduction}}
@@ -165,6 +177,28 @@ framework to attract more listings, while A2X, a competitor stock
 exchange, expects to double its number of listings and increase its
 market share in the coming year by offering a more attractive option of
 raising capital.
+
+The decreasing number of listed companies on the JSE is causing alarm,
+as it not only reflects a weaker market but also raises questions about
+the future of the exchange. Some firms may have decided to delist due to
+reasons such as a preference to become a private company, a merger or
+acquisition by another firm, consolidation, financial struggles, or
+failure to comply with listing regulations. In the past three years,
+well-known companies like Adapt IT, Alaris, Huge Group, Telemasters,
+Massmart, Grindrod Shipping, and Rebosis Property Fund have delisted.
+The COVID-19 pandemic has further intensified the global trend of
+delisting, and the JSE is facing increased competition from alternative
+exchanges such as A2X, which presents itself as a more appealing option
+for companies looking to raise capital both inside and outside of South
+Africa. The decline in delistings from the JSE is a significant matter
+of concern that demands attention and action to secure the stability and
+future growth of the exchange. The JSE is predominantly an institutional
+market with limited participation from retail customers and has been
+criticized for its lack of deep retail customer involvement. Capital
+flight from the JSE is anticipated to continue. The JSE CEO, Leila
+Fourie, has stated that multiple factors, such as the macro environment
+and investor sentiment, are driving the number of listings and
+delistings.
 
 In light of a clear increase in the number of delisitings, we
 investigate how share prices have moved and build machine learning model
@@ -285,22 +319,132 @@ conclude that regulators should be mindful of the negative effects of
 delisting and work to ensure that such events are managed in a manner
 that minimizes harm to stakeholders.
 
-\hypertarget{the-models}{%
-\section{THE MODELS}\label{the-models}}
+\hypertarget{methodology}{%
+\section{METHODOLOGY}\label{methodology}}
+
+\hypertarget{data-issues}{%
+\subsection{DATA ISSUES}\label{data-issues}}
+
+The R code is used to retrieve stock price data for 20 different
+companies listed on the JSE (Johannesburg Stock Exchange). The data
+includes the volume of stocks, open, high, low, close, and adjusted
+prices. The relevant libraries are loaded and the BatchGetSymbols
+function is used to retrieve the stock prices from January 2016 to the
+current date with a monthly frequency. The returned data is stored in a
+data.table called stocks\_data and ordered by ticker and ref.date. The
+tickers for these 20 companies include ``HAR'', ``SNT'', ``STX'',
+``TFG'', ``BHP'', ``SAB'', ``BTI'', ``CFR'', ``AMS'', ``MTN'', ``VOD'',
+``CPI'', ``SOL'', ``KIO'', ``ABG'',``SHP'',``SLM'', ``IMP'', ``SSW'',
+``MEI'', ``REM'' and represent firms such as Harman International
+Industries, Sanlam, Seagate Technology, The Foschini Group, BHP Group,
+British American Tobacco, Compagnie Financière Richemont, Amsterdam
+Molecular Therapeutics, MTN Group, Vodafone Group, Cape plc, Solaredge
+Technologies, Kerry Group, African Rainbow Minerals, Shoprite Holdings,
+Standard Life Aberdeen, Impala Platinum Holdings, Seaspan Corporation,
+Metair Investments, and Rand Merchant Insurance Holdings.
+
+\hypertarget{data-properties}{%
+\subsection{DATA PROPERTIES}\label{data-properties}}
+
+We perform unit root tests on all 20 time series data sets, focusing on
+the closing stock prices which we will use in our analysis. We use the
+Augmented Dickey Fuller. The null hypothesis for the Augmented
+Dickey-Fuller (ADF) unit root test is that the time series has a unit
+root, meaning it is non-stationary. In other words, the hypothesis is
+that the time series has a trend and there is a systematic pattern to
+its behavior that cannot be explained by random fluctuations. The
+alternative hypothesis is that the time series is stationary, meaning it
+has a constant mean, variance, and autocorrelation structure. The goal
+of the ADF test is to determine whether the null hypothesis can be
+rejected based on the observed data. If the p-value of the test is less
+than 5\%, the null hypothesis is rejected and the time series is
+considered to be stationary. If the p-value is greater than the
+significance level, then the null hypothesis cannot be rejected and the
+time series is considered to have a unit root and be non-stationary. We
+use a for-loop to iterate over all stocks and get the following results:
+
+\begin{longtable}[]{@{}lccc@{}}
+\caption{Unit Root Test Results}\tabularnewline
+\toprule()
+ticker & test & statistic & p.value \\
+\midrule()
+\endfirsthead
+\toprule()
+ticker & test & statistic & p.value \\
+\midrule()
+\endhead
+HAR & ADF & -3.681082 & 0.0249348 \\
+SNT & ADF & -3.681082 & 0.0249348 \\
+STX & ADF & -3.681082 & 0.0249348 \\
+TFG & ADF & -3.681082 & 0.0249348 \\
+BHP & ADF & -3.681082 & 0.0249348 \\
+SAB & ADF & -3.681082 & 0.0249348 \\
+BTI & ADF & -3.681082 & 0.0249348 \\
+CFR & ADF & -3.681082 & 0.0249348 \\
+AMS & ADF & -3.681082 & 0.0249348 \\
+MTN & ADF & -3.681082 & 0.0249348 \\
+VOD & ADF & -3.681082 & 0.0249348 \\
+CPI & ADF & -3.681082 & 0.0249348 \\
+SOL & ADF & -3.681082 & 0.0249348 \\
+KIO & ADF & -3.681082 & 0.0249348 \\
+ABG & ADF & -3.681082 & 0.0249348 \\
+SHP & ADF & -3.681082 & 0.0249348 \\
+SLM & ADF & -3.681082 & 0.0249348 \\
+IMP & ADF & -3.681082 & 0.0249348 \\
+SSW & ADF & -3.681082 & 0.0249348 \\
+MEI & ADF & -3.681082 & 0.0249348 \\
+REM & ADF & -3.681082 & 0.0249348 \\
+\bottomrule()
+\end{longtable}
+
+The time series's for all stocks have no unit roots and we conclude that
+they are stationary.
+
+\hypertarget{variable-description}{%
+\subsection{VARIABLE DESCRIPTION}\label{variable-description}}
+
+The main variable for this study is the closing stock price. We conduct
+a technical analysis which focuses only on price and does not consider a
+lot of other values like net profits, market sentiment, amount invested
+etc. This is common practice in univariate time series models where by
+the behavior of one particular time series is tacked over time and its
+relationship to its lags is analyzed. Univariate time series models
+usually consider the lags of the variable, known as the autoregressive
+part, as well as the lags of the error term, known as the moving average
+part. These are known as ARMA(p,q) models where p is number of variable
+lags and q the number of error lags. Should the series be
+none-stationary, a differencing parameter, d, is added to have an
+ARIMA(p,d,q) model. This is the Box-Jenkins approach and we expect the
+movement of these stocks to be random thought to an extent predictable.
+In light of increased delistings, a fall in stock prices in future is
+likely.
+
+\hypertarget{model-selection-and-specification}{%
+\subsection{MODEL SELECTION AND
+SPECIFICATION}\label{model-selection-and-specification}}
+
+The Box-Jenkins approach is a time series modeling and forecasting
+method that involves a series of steps to identify the best model for a
+given data set, including data collection and analysis, model
+identification, estimation, diagnosis, and forecasting. It is a flexible
+and robust method for time series analysis and can be applied to data
+sets with trends, seasonality, and autocorrelation. However, it requires
+a good understanding of statistical techniques and modeling, and the
+process can be complex: (Box 1976)
 
 A technical analysis is done on twenty top performing comapnies on the
-JSE. We first implement an Auto-ARIMA model which, according to (Hyndman
-2008), is a time series forecasting method that combines both ARIMA and
-machine learning techniques. The goal of Auto-ARIMA is to automatically
-determine the best ARIMA model parameters for a given time series, and
-to provide accurate forecasting results; Auto-ARIMA works by first
-performing an initial analysis of the time series data to identify
-trends, seasonality, and other patterns. Based on this analysis, the
-method then tests various ARIMA models and chooses the one that provides
-the best fit for the data. Auto-ARIMA also includes a stepwise model
-selection process, where it tries different combinations of p, d, and q
-parameters until it finds the optimal combination that minimizes the
-prediction error.
+JSE. Folowing the Box-Jenkins approach, we first implement an Auto-ARIMA
+model which, according to (Hyndman 2008), is a time series forecasting
+method that combines both ARIMA and machine learning techniques. The
+goal of Auto-ARIMA is to automatically determine the best ARIMA model
+parameters for a given time series, and to provide accurate forecasting
+results; Auto-ARIMA works by first performing an initial analysis of the
+time series data to identify trends, seasonality, and other patterns.
+Based on this analysis, the method then tests various ARIMA models and
+chooses the one that provides the best fit for the data. Auto-ARIMA also
+includes a stepwise model selection process, where it tries different
+combinations of p, d, and q parameters until it finds the optimal
+combination that minimizes the prediction error.
 
 An ARIMA(p,d,q) can be specified as:
 
@@ -346,26 +490,27 @@ and \(b_y\) is the bias vector for the output.
 
 RNNs can be used with different types of activation functions, such as
 the Long Short-Term Memory (LSTM) or the Gated Recurrent Unit (GRU), to
-handle various types of sequences.
+handle various types of sequences. This code is using the caret library
+to perform time series prediction using Recurrent Neural Network (RNN)
+model. The data is split into train and test sets for each stock using
+createDataPartition and lapply functions. The RNN model is defined in
+the rnn\_model function. This function takes the train and test data for
+each stock and trains the model using the caret's train function. The
+predict function is then used to make predictions on the test data. The
+sapply function is used to apply the rnn\_model to each stock. The final
+result is stored in the predictions object.
 
 \hypertarget{visualisations}{%
 \section{VISUALISATIONS}\label{visualisations}}
 
 The top 20 companies on the JSE as at 11 February 2023 are shown in
-Figure 2 and these are some of the companies used in our analysis.
-
-\begin{figure}
-\centering
-\includegraphics{stockprice.png}
-\caption{Number of New Listings and Delistin}
-\end{figure}
-
-Firstly, the graphs show how some for he biggest companies on the JSE in
-terms of market capitalization have performed from 2016 to date have
-performed. Companies like ABSA (ABG), BHP Group Limited (BHP), RICHEMONT
-(CFR), MTN GROUP (MTN ) and SHOPRIT (SHP) show a general upward trend
-whilst companies like SANTAM (SNT), VODACOM (VOD), AMPLATS (AMS) and
-BATS (BTI) show a persistent downward trend.
+Figure 3 in the appendix and these are some of the companies used in our
+analysis. Firstly, the graphs show how some for he biggest companies on
+the JSE in terms of market capitalization have performed from 2016 to
+date have performed. Companies like ABSA (ABG), BHP Group Limited (BHP),
+RICHEMONT (CFR), MTN GROUP (MTN ) and SHOPRIT (SHP) show a general
+upward trend whilst companies like SANTAM (SNT), VODACOM (VOD), AMPLATS
+(AMS) and BATS (BTI) show a persistent downward trend.
 
 \begin{figure}
 \centering
@@ -373,26 +518,29 @@ BATS (BTI) show a persistent downward trend.
 \caption{Number of New Listings and Delistings}
 \end{figure}
 
-The returns for all 20 stocks in this study are mean reverting as shown
-by this diagram and hence ARIMA time series models can used when the
-stock prices are either differenced or logged.
-
-\begin{figure}
-\centering
-\includegraphics{returns.png}
-\caption{Number of New Listings and Delistings}
-\end{figure}
+The returns for all 20 stocks in this study, as shown in Figure 4 in the
+appendix, are mean reverting and hence ARIMA time series models can used
+when the stock prices are either differenced or logged.
 
 \hypertarget{data-pre-processing}{%
-\section{DATA PRE-PROCESSING}\label{data-pre-processing}}
+\subsection{DATA PRE-PROCESSING}\label{data-pre-processing}}
 
-In our data pre-processing, we opt to get the data for only the
-``price.close'' column. Using the caTools package we split the data set
-into our training set and the test set.
+The data pre-processing process involves preparing a time series data
+set for analysis and modeling. By focusing on only the ``price.close''
+column, the data set is reduced to a single variable that represents the
+closing price of a financial instrument (such as a stock or a currency)
+at a given time. Next, the data set is split into two parts using the
+``caTools'' package: the training set and the test set. The training set
+is used to fit the model, while the test set is used to evaluate its
+performance. This split is important because it allows the model to be
+tested on new, unseen data, which helps to assess its generalization
+ability and prevent overfitting. Overfitting occurs when a model is too
+closely fit to the training data and performs poorly on new, unseen
+data.
 
-\hypertarget{evaluating-the-models-using-the-mean-square-error}{%
-\section{EVALUATING THE MODELS USING THE MEAN SQUARE
-ERROR}\label{evaluating-the-models-using-the-mean-square-error}}
+\hypertarget{evaluating-the-models-using-the-mse}{%
+\section{EVALUATING THE MODELS USING THE
+MSE}\label{evaluating-the-models-using-the-mse}}
 
 the Mean Squared Error (MSE) is a commonly used criterion for evaluating
 machine learning models and it is the average squared difference between
@@ -425,6 +573,25 @@ factors, such as technical indicators, market sentiment, and news
 articles. With more information in the model it is logical to assume we
 would get better predictions.
 
+\newpage
+
+\hypertarget{appendix}{%
+\section{APPENDIX}\label{appendix}}
+
+\begin{figure}
+\centering
+\includegraphics{stockprice.png}
+\caption{Number of New Listings and Delistin}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{returns.png}
+\caption{Stock Returns}
+\end{figure}
+
+\newpage
+
 \hypertarget{references}{%
 \section{REFERENCES}\label{references}}
 
@@ -446,6 +613,10 @@ Market Finance} 9 (3): 299--323.
 Bloomberg. 2023. {``No End in Sight for South Africa's Delisting Trend,
 Says A2X CEO.''} 2023.
 \url{https://www.engineeringnews.co.za/article/no-end-in-sight-for-south-africas-delisting-trend-says-a2x-ceo-2023-01-20}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-box1976}{}}%
+Box, \& Jenkins, G. E. 1976. {``Time Series Analysis: Forecasting and
+Control.''} \emph{San Francisco: Holden-Day}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-BusinessTech2021}{}}%
 BusinessTech. 2021. {``South Africa's Shrinking JSE - Investors Explain
